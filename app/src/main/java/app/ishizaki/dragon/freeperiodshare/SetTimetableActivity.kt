@@ -52,12 +52,12 @@ class SetTimetableActivity : AppCompatActivity() {
                 }
 
                 cellButton.layoutParams = params
-                // 最初はすべてグレー
+
                 cellButton.setBackgroundColor(unselectedGray)
 
                 gridState[row][column] = false
 
-                // タップしたら色を変更（グレーから青に変更）
+
                 cellButton.setOnClickListener {
                     val currentColor = (it.background as? ColorDrawable)?.color
                     if (currentColor == unselectedGray) {
@@ -92,26 +92,22 @@ class SetTimetableActivity : AppCompatActivity() {
                         "gridState" to gridStateList
                     )
 
-                    Log.d("時間割配列", data.toString())
-
-
-                    db.collection("timetables")
-                        .document(userId)
+                    db.collection("timetables").document(userId)
                         .set(data)
                         .addOnSuccessListener {
 
-                            val timetableStatus = hashMapOf<String, Any>(
-                                "timetableStatus" to true
-                            )
+//                            val timetableStatus = hashMapOf<String, Any>(
+//                                "timetableStatus" to true
+//                            )
 
-                            db.collection("users")
-                                .document(userId)
-                                .update(timetableStatus)
-                                .addOnSuccessListener {
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
+//                            db.collection("users")
+//                                .document(userId)
+//                                .update(timetableStatus)
+//                                .addOnSuccessListener {
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+//                                }
 
                         }
                         .addOnFailureListener { e ->
