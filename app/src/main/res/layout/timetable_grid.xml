@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timetable_grid_button"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        app:cornerRadius="12dp"
+        app:backgroundTint="#A2A2A2"/>
+
+
+</LinearLayout>
+
