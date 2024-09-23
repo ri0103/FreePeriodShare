@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 
 class TitleActivity : AppCompatActivity() {
@@ -75,17 +76,13 @@ class TitleActivity : AppCompatActivity() {
                     user?.let {
                         val userData = hashMapOf(
                             "uid" to it.uid,
-                            "userName" to it.displayName,
-                            "userId" to "",
-                            "instagramId" to "",
                             "email" to it.email,
-//                            "timetableStatus" to false
                         )
 
                         db.collection("users").document(it.uid)
-                            .set(userData)
+                            .set(userData, SetOptions.merge())
                             .addOnSuccessListener {
-                                Log.d(TAG, "User successfully added to Firestore")
+
                                 val intent = Intent(this, ProfileSettingActivity::class.java)
                                 startActivity(intent)
                                 finish()

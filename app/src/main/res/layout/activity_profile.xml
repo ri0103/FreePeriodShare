@@ -7,13 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-    <LinearLayout
+    <Button
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/signout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="サインアウト" />
+
+    <LinearLayout
+        android:id="@+id/profile_info_linear_layout"
+        app:layout_constraintTop_toBottomOf="@id/signout_button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp">
 
         <ImageView
             android:layout_width="60dp"
@@ -35,25 +45,51 @@
                 android:layout_height="wrap_content"
                 android:text="ユーザーid"
                 android:textSize="24sp" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/instagramid_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="インスタグラムid"
+                android:textSize="16sp" />
 
         </LinearLayout>
+
         <ImageButton
+            android:id="@+id/edit_profile_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_edit_24"
             />
 
 
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/profile_info_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="80dp">
         <Button
             android:id="@+id/edit_timetable_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="時間割の変更" />
-        <Button
-            android:id="@+id/signout_button"
-            android:layout_width="wrap_content"
+        <GridLayout
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/grid_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="サインアウト" />
+            android:alignmentMode="alignMargins"
+            android:columnCount="7"
+            android:rowCount="9"
+            android:padding="16dp"
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

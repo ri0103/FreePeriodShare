@@ -9,9 +9,12 @@
 
     <ImageButton
         android:id="@+id/open_profile_activity_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:padding="12dp"
         android:src="@drawable/baseline_person_outline_24"
+        android:scaleType="fitCenter"
+        android:background="@drawable/circle_button"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 

@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import app.ishizaki.dragon.freeperiodshare.databinding.ActivityProfileSettingBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class ProfileSettingActivity : AppCompatActivity() {
 
@@ -23,20 +24,21 @@ class ProfileSettingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        val userId = auth.currentUser?.uid
+        val currentUid = auth.currentUser?.uid
 
+        val isEdit = intent.getBooleanExtra("isEdit", false)
 
-        if (userId != null) {
-            db.collection("users").document(userId).get()
+        if (currentUid != null && !isEdit) {
+            db.collection("users").document(currentUid).get()
                 .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val userName = document.getString("userName")
-                        val userId = document.getString("userId")
-                        val instagramId = document.getString("instagramId")
-
-                        binding.usernameInputText.setText(userName)
-                        binding.useridInputText.setText(userId)
-                        binding.instagramidInputText.setText(instagramId)
+                    if (document.get("gridState") != null){
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else if (document.getString("userId") != null) {
+                        val intent = Intent(this, SetTimetableActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
                 }
                 .addOnFailureListener { e ->
@@ -49,37 +51,34 @@ class ProfileSettingActivity : AppCompatActivity() {
             val updatedUserid = binding.useridInputText.text.toString()
             val updatedInstagramid = binding.instagramidInputText.text.toString()
 
-            if (userId != null) {
+            if (currentUid != null) {
                 val userData = hashMapOf(
                     "userName" to updatedUsername,
                     "userId" to updatedUserid,
                     "instagramId" to updatedInstagramid
                 )
 
-                val docRef = db.collection("users").document(userId)
+                val docRef = db.collection("users").document(currentUid)
+
                 docRef
-                    .update(userData as Map<String, Any>)
-                    .addOnSuccessListener { document ->
-                        docRef.get()
-                            .addOnSuccessListener { document ->
-                                if (document != null && document.exists()) {
-                                    val timetableStatus = document.getBoolean("timetableStatus")
-                                    if (timetableStatus == true) {
-                                        val intent = Intent(this, MainActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-                                    }else{
-                                        val intent = Intent(this, SetTimetableActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-                                    }
-                                }
-                            }
-                        startActivity(intent)
+                .set(userData as Map<String, Any>, SetOptions.merge())
+                .addOnSuccessListener {
+                    docRef.get().addOnSuccessListener { document ->
+                        if (document.getString("userId") != null) {
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }else{
+                            val intent = Intent(this, SetTimetableActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
-                    .addOnFailureListener { e ->
-                        Log.w("ProfileSetting", "Error updating document", e)
-                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.w("ProfileSetting", "Error getting document", e)
+                }
+
             }
         }
 

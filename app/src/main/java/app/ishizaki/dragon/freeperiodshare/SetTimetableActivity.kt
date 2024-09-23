@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import app.ishizaki.dragon.freeperiodshare.databinding.ActivitySetTimetableBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class SetTimetableActivity : AppCompatActivity() {
 
@@ -32,7 +33,7 @@ class SetTimetableActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        val userId = auth.currentUser?.uid
+        val currentUid = auth.currentUser?.uid
 
         val selectedBlue = Color.parseColor("#6884B7")
         val unselectedGray = Color.parseColor("#A2A2A2")
@@ -45,8 +46,9 @@ class SetTimetableActivity : AppCompatActivity() {
                 val cellButton = Button(this)
                 val params = GridLayout.LayoutParams().apply {
                     width = 0
-                    height = GridLayout.LayoutParams.WRAP_CONTENT
-                    columnSpec = GridLayout.spec(column, 1f) // 重みを1fに設定
+                    height = 200
+//                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(column, 1f)
                     rowSpec = GridLayout.spec(row, 1f)
                     setMargins(8, 8, 8, 8)
                 }
@@ -56,7 +58,6 @@ class SetTimetableActivity : AppCompatActivity() {
                 cellButton.setBackgroundColor(unselectedGray)
 
                 gridState[row][column] = false
-
 
                 cellButton.setOnClickListener {
                     val currentColor = (it.background as? ColorDrawable)?.color
@@ -68,14 +69,35 @@ class SetTimetableActivity : AppCompatActivity() {
                         gridState[row][column] = false
                     }
                 }
-                // グリッドレイアウトに追加
+
                 gridLayout.addView(cellButton)
             }
         }
 
+        if (currentUid != null) {
+            db.collection("users")
+                .document(currentUid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()){
+                        val gridStateList = document.get("gridState") as? List<Map<String, Long>>
+
+                        if (gridStateList != null) {
+
+                            for (cell in gridStateList) {
+                                val row = cell["periodIndex"]?.toInt() ?: 0
+                                val column = cell["dayOfWeek"]?.toInt() ?: 0 //firebaseのデータを反映する
+                                gridState[row][column] = true
+                            }
+                            updateGridLayout()
+                        }
+                    }
+                }
+        }
+
         binding.nextButton.setOnClickListener {
 
-                if (userId != null) {
+                if (currentUid != null) {
 
                     val gridStateList = mutableListOf<Map<String, Any>>()
 
@@ -88,27 +110,15 @@ class SetTimetableActivity : AppCompatActivity() {
                     }
                     Log.d("時間割配列", gridStateList.toString())
                     val data = hashMapOf<String, Any>(
-                        "uid" to userId,
                         "gridState" to gridStateList
                     )
 
-                    db.collection("timetables").document(userId)
-                        .set(data)
+                    db.collection("users").document(currentUid)
+                        .set(data, SetOptions.merge())
                         .addOnSuccessListener {
-
-//                            val timetableStatus = hashMapOf<String, Any>(
-//                                "timetableStatus" to true
-//                            )
-
-//                            db.collection("users")
-//                                .document(userId)
-//                                .update(timetableStatus)
-//                                .addOnSuccessListener {
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                             finish()
-//                                }
-
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "エラーが発生しました $e", Toast.LENGTH_SHORT).show()
@@ -116,4 +126,27 @@ class SetTimetableActivity : AppCompatActivity() {
                 }
             }
         }
+
+    private fun updateGridLayout() {
+        val gridLayout = binding.gridLayout
+
+        for (row in 0 until rows) {
+            for (column in 0 until columns) {
+                val cellButton = gridLayout.getChildAt(row * columns + column) as Button
+
+                cellButton?.let {
+                    when{
+                        gridState[row][column] -> {
+                            it.setBackgroundColor(getColor(R.color.selected_blue))
+                        }
+                        else -> {
+                            it.setBackgroundColor(getColor(R.color.unselected_gray))
+                        }
+                    }
+                }
+            }
+        }
     }
+
+}
+
