@@ -18,26 +18,147 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-
-    <com.google.android.material.textview.MaterialTextView
-        app:layout_constraintBottom_toTopOf="@id/grid_layout"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        app:layout_constraintBottom_toTopOf="@id/my_timetable"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="マイ時間割"/>
-    <GridLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:src="@drawable/cell_red"
+            android:layout_marginRight="24dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="をタップして\n友達と繋がろう！"
+            android:textSize="24sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_timetable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/grid_layout"
-        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="月"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="火"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="水"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="木"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="金"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:text="土"/>
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
+            android:columnCount="7"
+            android:rowCount="9"
+            android:paddingTop="4dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/my_timetable"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alignmentMode="alignMargins"
-        android:columnCount="7"
-        android:rowCount="9"
-        android:padding="16dp"
-        android:layout_gravity="center" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="8dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/cell_red"
+                android:layout_marginRight="24dp"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="共通のフレンドありコマ"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/cell_blue"
+                android:layout_marginRight="24dp"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="自分だけの空きコマ"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import app.ishizaki.dragon.freeperiodshare.databinding.ActivityMainBinding
 import app.ishizaki.dragon.freeperiodshare.databinding.ActivitySetTimetableBinding
+import app.ishizaki.dragon.freeperiodshare.databinding.MoveToInstagramBinding
 import com.google.api.Distribution.BucketOptions.Linear
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             // GridLayoutのボタンを更新
-                            loadOtherUserTimetables(currentUid)
+                            loadFriendsUserTimetables(currentUid)
                         }
                     }
                 }
@@ -104,29 +105,60 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun loadOtherUserTimetables(currentUid: String) {
-        db.collection("users")
-            .whereNotEqualTo("uid", currentUid)
-            .get()
-            .addOnSuccessListener { documents ->
-                val otherUserGridState = Array(rows) { BooleanArray(columns) }
+    fun loadFriendsUserTimetables(currentUid: String) {
 
-                for (document in documents) {
-                    val gridStateList = document.get("gridState") as? List<Map<String, Long>>
-                    Log.d("testtest", gridStateList.toString())
 
-                    gridStateList?.let {
-                        for (cell in it) {
-                            val row = cell["periodIndex"]?.toInt() ?: 0
-                            val column = cell["dayOfWeek"]?.toInt() ?: 0
-                            otherUserGridState[row][column] = true
+        db.collection("users").document(currentUid).collection("following")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null){
+                    Log.w("Firestore", "リスニング中にエラーが発生しました", e)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null && !snapshot.isEmpty){
+                    val friendsUidList = mutableListOf<String>()
+                    for (document in snapshot.documents){
+                        val friendUid = document.getString("uid")
+                        if (friendUid != null) {
+                            friendsUidList.add(friendUid)
                         }
                     }
+
+                    if (friendsUidList.isNotEmpty()){
+                        db.collection("users")
+//            .whereNotEqualTo("uid", currentUid)
+                            .whereIn("uid", friendsUidList)
+                            .get()
+                            .addOnSuccessListener { documents ->
+                                val friendsGridState = Array(rows) { BooleanArray(columns) }
+
+                                for (document in documents) {
+                                    val gridStateList = document.get("gridState") as? List<Map<String, Long>>
+                                    Log.d("testtest", gridStateList.toString())
+
+                                    gridStateList?.let {
+                                        for (cell in it) {
+                                            val row = cell["periodIndex"]?.toInt() ?: 0
+                                            val column = cell["dayOfWeek"]?.toInt() ?: 0
+                                            friendsGridState[row][column] = true
+                                        }
+                                    }
+                                }
+//                                Toast.makeText(this, "正常に処理中", Toast.LENGTH_SHORT).show()
+                                updateGridLayout(friendsGridState, currentUid)
+
+                            }
+                            .addOnFailureListener { e ->
+//                                Toast.makeText(this, "データの取得中にエラーが発生しました", Toast.LENGTH_SHORT).show()
+                                updateGridLayout(Array(6) { BooleanArray(6) }, currentUid)
+                            }
+                    }else{
+//                        Toast.makeText(this, "フォローしているユーザーがいません", Toast.LENGTH_SHORT).show()
+                        updateGridLayout(Array(6) { BooleanArray(6) }, currentUid)
+                    }
+                }else{
+//                    Toast.makeText(this, "フォローしているユーザーがいません", Toast.LENGTH_SHORT).show()
+                    updateGridLayout(Array(6) { BooleanArray(6) }, currentUid)
                 }
-                updateGridLayout(otherUserGridState, currentUid)
-            }
-            .addOnFailureListener { e ->
-//            Toast.makeText(this, "データの取得中にエラーが発生しました", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -161,66 +193,70 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showUsersForCell(row: Int, column: Int, currentUid: String) {
-        db.collection("users")
-            .whereArrayContains("gridState", mapOf("periodIndex" to row, "dayOfWeek" to column))
-            .get()
+
+        val friendsUidList = mutableListOf<String>()
+
+        db.collection("users").document(currentUid).collection("following").get()
             .addOnSuccessListener { documents ->
-                val userNames = mutableListOf<List<String>>()
-
-                for (document in documents){
-                    val uid = document.getString("uid")
-                    if (uid != currentUid) {
-                        val userName = document.getString("userName") ?: "ユーザー不明"
-                        val userId = document.getString("userId") ?: "ユーザー不明"
-                        val instagramId = document.getString("instagramId") ?: "ユーザー不明"
-
-                        userNames.add(mutableListOf(userName, userId, instagramId))
+                for (document in documents) {
+                    val friendUid = document.getString("uid")
+                    if (friendUid != null) {
+                        friendsUidList.add(friendUid)
                     }
                 }
-                Log.d("空きコマ共通配列", userNames.toString())
-                showUserDialog(userNames)
-            }
-            .addOnFailureListener{
 
+                db.collection("users")
+                    .whereIn("uid", friendsUidList)
+                    .whereArrayContains("gridState", mapOf("periodIndex" to row, "dayOfWeek" to column))
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val userNames = mutableListOf<List<String>>()
+                        for (document in documents){
+                            val uid = document.getString("uid")
+                            if (uid != currentUid) {
+                                val userName = document.getString("userName") ?: "ユーザー不明"
+                                val userId = document.getString("userId") ?: "ユーザー不明"
+                                val instagramId = document.getString("instagramId") ?: "ユーザー不明"
+
+                                userNames.add(mutableListOf(userName, userId, instagramId))
+                            }
+                        }
+                        Log.d("空きコマ共通配列", userNames.toString())
+                        showUserDialog(userNames, row, column)
+                    }
+                    .addOnFailureListener{
+                    }
             }
     }
 
-    private fun showUserDialog(userNames: List<List<String>>) {
+    private fun showUserDialog(userNames: List<List<String>>, row: Int, column: Int) {
         val builder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_user_list, null)
         val userListContainer = dialogView.findViewById<LinearLayout>(R.id.user_list_container)
+
+        val daysOfWeek = listOf("月", "火", "水", "木", "金", "土")
 
         for (user in userNames){
             val userName = user[0]
             val userId = user[1]
             val instagramId = user[2]
 
-            val userLayout = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
+            val userLayout = layoutInflater.inflate(R.layout.move_to_instagram, userListContainer, false) as LinearLayout
+            val userNameTextView = userLayout.findViewById<TextView>(R.id.username_text_view)
+            val userIdTextView = userLayout.findViewById<TextView>(R.id.userid_text_view)
+            val moveToInstagramButton = userLayout.findViewById<Button>(R.id.move_to_instagram_button)
 
-            val userNameTextView = TextView(this).apply {
-                text = userName
-                textSize = 18f
-                setPadding(0, 0, 16, 0)
+            userNameTextView.text = userName
+            userIdTextView.text = "@" + userId
+            moveToInstagramButton.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/${instagramId}/"))
+              startActivity(intent)
             }
-
-            val openWebsiteButton = Button(this).apply {
-                text = "インスタへ"
-                setOnClickListener {
-                    // ブラウザでウェブサイトを開く
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/${instagramId}/"))
-                    startActivity(intent)
-                }
-            }
-
-            userLayout.addView(userNameTextView)
-            userLayout.addView(openWebsiteButton)
 
             userListContainer.addView(userLayout)
         }
 
-        builder.setTitle("同じ空きコマの友達")
+        builder.setTitle("${daysOfWeek[column]}曜日 ${row + 1}限の空きコマ")
         builder.setView(dialogView)
         builder.setPositiveButton("閉じる") {dialog, _ ->
             dialog.dismiss()
