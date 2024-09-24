@@ -5,4 +5,7 @@
     <color name="selected_blue">#FF6884B7</color>
     <color name="unselected_gray">#FFA2A2A2</color>
     <color name="has_friends_red">#FFD26D6B</color>
+    <color name="main_theme">#FF6884B7</color>
+    <color name="accent_color">#FFf5bcf3</color>
+    <color name="light_blue">#FF9eb3d9</color>
 </resources>

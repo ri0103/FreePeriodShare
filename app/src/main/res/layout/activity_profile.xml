@@ -7,64 +7,75 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-    <com.google.android.material.button.MaterialButton
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/signout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon="@drawable/baseline_logout_24"
-        app:backgroundTint="#616161"
         android:layout_margin="8dp"
-        android:text="サインアウト" />
+        android:contentDescription="SignOut"
+        android:src="@drawable/baseline_logout_24"
+        app:backgroundTint="#f2c9cc"
+        android:tint="@color/white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/signout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/signout_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:id="@+id/profile_info_linear_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:layout_marginTop="32dp">
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/baseline_person_outline_24"
-                android:layout_marginRight="12dp"/>
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="24dp"
+
+                android:src="@drawable/baseline_person_outline_24" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/username_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/zenmarubold"
                     android:text="名前"
-                    android:textSize="36sp"
-                    android:layout_marginBottom="12dp"/>
+                    android:textSize="32sp" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/userid_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ユーザーid"
                     android:textSize="24sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/instagram_gradient"
-                        android:layout_marginRight="4dp"/>
+                        android:layout_marginRight="4dp"
+                        android:src="@drawable/instagram_gradient" />
+
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/instagramid_text_view"
                         android:layout_width="wrap_content"
@@ -81,10 +92,9 @@
                 android:id="@+id/edit_profile_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_edit_24"
+                android:layout_marginLeft="48dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:layout_marginLeft="12dp"
-                />
+                android:src="@drawable/baseline_edit_24" />
 
         </LinearLayout>
 
@@ -92,37 +102,46 @@
             android:id="@+id/my_timetable_info_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="80dp">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/edit_timetable_button"
-                app:icon="@drawable/baseline_edit_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="#98a3b3"
-                android:layout_margin="8dp"
-                android:text="時間割の変更" />
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/edit_timetable_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@drawable/baseline_edit_24"-->
-<!--                android:background="?android:attr/selectableItemBackgroundBorderless"-->
-<!--                android:layout_marginLeft="12dp"/>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="マイ空きコマ"
+                    android:textSize="24sp" />
+
+                <ImageButton
+                    android:id="@+id/edit_timetable_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/baseline_edit_24" />
+            </LinearLayout>
+
             <GridLayout
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/grid_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:alignmentMode="alignMargins"
                 android:columnCount="7"
-                android:rowCount="9"
                 android:padding="16dp"
-                android:layout_gravity="center" />
+                android:rowCount="9"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 
@@ -130,29 +149,42 @@
             android:id="@+id/my_friends_info_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_weight="1"
+                android:text="フレンドリスト"
+
+                android:textSize="24sp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp">
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    app:layout_constraintTop_toTopOf="parent"
                     android:id="@+id/friend_username_input_field"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    >
+                    android:layout_weight="1"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/friend_username_input_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"/>
+                        android:hint="友達のユーザーID"
+                        android:inputType="text"
+                        android:textSize="18sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,20 +192,23 @@
                     android:id="@+id/add_friend_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/baseline_add_24"
-                    android:text="追加"/>
+                    android:layout_marginLeft="8dp"
+                    android:text="追加"
+                    app:backgroundTint="#727BA3"
+                    app:icon="@drawable/baseline_add_24" />
 
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/followingRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="150dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
 
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

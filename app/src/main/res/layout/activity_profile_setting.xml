@@ -26,11 +26,10 @@
             android:src="@drawable/baseline_person_outline_24"
             android:layout_marginBottom="60dp"/>
 
-
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ユーザー名："/>
+            android:text="名前："/>
 
         <com.google.android.material.textfield.TextInputLayout
             app:layout_constraintTop_toTopOf="parent"
@@ -39,13 +38,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
+            app:boxStrokeColor="#727BA3"
             >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:inputType="text"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textview.MaterialTextView
@@ -60,24 +61,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
+            app:boxStrokeColor="#727BA3"
             >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/userid_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword|textCapCharacters"
+                android:inputType="textVisiblePassword"
                 android:digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textview.MaterialTextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
-            android:text="インスタグラム ID"/>
-
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/instagram_gradient"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="Instagram ID"/>
+        </LinearLayout>
         <com.google.android.material.textfield.TextInputLayout
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/instagramid_input_field"
@@ -85,13 +99,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
+            app:boxStrokeColor="#FBC5E2"
             >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/instagramid_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword|textCapCharacters"
+                android:inputType="textVisiblePassword"
                 android:digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
                 />
 

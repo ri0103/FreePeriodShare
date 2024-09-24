@@ -9,7 +9,7 @@
     <item>
         <shape android:shape="oval">
 <!--            <solid android:color="#FFBB86FC"/>-->
-            <stroke android:width="2dp" android:color="#000000"/> <!-- 枠線 -->
+            <stroke android:width="3dp" android:color="#000000"/> <!-- 枠線 -->
         </shape>
     </item>
 </layer-list>

@@ -26,25 +26,42 @@ class ProfileSettingActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         val currentUid = auth.currentUser?.uid
 
+
         val isEdit = intent.getBooleanExtra("isEdit", false)
 
-        if (currentUid != null && !isEdit) {
+        if (currentUid != null) {
+
             db.collection("users").document(currentUid).get()
                 .addOnSuccessListener { document ->
-                    if (document.get("gridState") != null){
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else if (document.getString("userId") != null) {
-                        val intent = Intent(this, SetTimetableActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                    if ( !isEdit){
+                        if (document.get("userId") == null){
+
+                        } else if (document.get("gridState") == null){
+                            val intent = Intent(this, SetTimetableActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
+
+                    if (isEdit){
+                        binding.usernameInputText.setText(document.getString("userName").toString())
+                        binding.useridInputText.setText(document.getString("userId").toString())
+                        binding.instagramidInputText.setText(document.getString("instagramId").toString())
+                    }
+
+
                 }
                 .addOnFailureListener { e ->
                     Log.w("ProfileSetting", "Error getting document", e)
                 }
+
         }
+
+
 
         binding.saveUserProfileButton.setOnClickListener {
             val updatedUsername = binding.usernameInputText.text.toString()
@@ -64,7 +81,9 @@ class ProfileSettingActivity : AppCompatActivity() {
                 .set(userData as Map<String, Any>, SetOptions.merge())
                 .addOnSuccessListener {
                     docRef.get().addOnSuccessListener { document ->
-                        if (document.getString("userId") != null) {
+                        if(isEdit){
+                            finish()
+                        } else if (document.get("gridState") != null) {
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                             finish()

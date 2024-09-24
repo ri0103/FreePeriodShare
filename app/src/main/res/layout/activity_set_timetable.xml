@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".SetTimetableActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -33,12 +33,38 @@
             android:padding="16dp"
             android:layout_gravity="center" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/baseline_question_mark_24"
+                app:tint="#454545" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#454545"
+                android:fontFamily="@font/zenmaruregular"
+                android:text="空きコマとは、授業と授業の間にある空白のコマを指します。\n授業に挟まれていない場合は空きコマではありません。"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
+
         <Button
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="次へ"
+            android:text="保存"
             android:layout_gravity="center"
+            android:layout_marginTop="36dp"
             android:padding="16dp"
             android:backgroundTint="#727BA3" />
 

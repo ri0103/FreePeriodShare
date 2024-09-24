@@ -10,6 +10,7 @@ import android.widget.GridLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import app.ishizaki.dragon.freeperiodshare.databinding.ActivitySetTimetableBinding
@@ -35,8 +36,7 @@ class SetTimetableActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         val currentUid = auth.currentUser?.uid
 
-        val selectedBlue = Color.parseColor("#6884B7")
-        val unselectedGray = Color.parseColor("#A2A2A2")
+        val isEdit = intent.getBooleanExtra("isEdit", false)
 
         val gridLayout = binding.gridLayout
         gridLayout.columnCount = columns
@@ -46,8 +46,7 @@ class SetTimetableActivity : AppCompatActivity() {
                 val cellButton = Button(this)
                 val params = GridLayout.LayoutParams().apply {
                     width = 0
-                    height = 200
-//                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    height = 160
                     columnSpec = GridLayout.spec(column, 1f)
                     rowSpec = GridLayout.spec(row, 1f)
                     setMargins(8, 8, 8, 8)
@@ -55,17 +54,19 @@ class SetTimetableActivity : AppCompatActivity() {
 
                 cellButton.layoutParams = params
 
-                cellButton.setBackgroundColor(unselectedGray)
+                cellButton.setBackgroundResource(R.drawable.timetable_grid_unselected)
 
                 gridState[row][column] = false
 
+                val unselectedDrawable = ContextCompat.getDrawable(this, R.drawable.timetable_grid_unselected)
+
                 cellButton.setOnClickListener {
-                    val currentColor = (it.background as? ColorDrawable)?.color
-                    if (currentColor == unselectedGray) {
-                        cellButton.setBackgroundColor(selectedBlue)
+                    val currentDrawable = cellButton.background
+                    if (currentDrawable.constantState == unselectedDrawable?.constantState) {
+                        cellButton.setBackgroundResource(R.drawable.timetable_grid_selected)
                         gridState[row][column] = true
                     } else {
-                        cellButton.setBackgroundColor(unselectedGray)
+                        cellButton.setBackgroundResource(R.drawable.timetable_grid_unselected)
                         gridState[row][column] = false
                     }
                 }
@@ -86,7 +87,7 @@ class SetTimetableActivity : AppCompatActivity() {
 
                             for (cell in gridStateList) {
                                 val row = cell["periodIndex"]?.toInt() ?: 0
-                                val column = cell["dayOfWeek"]?.toInt() ?: 0 //firebaseのデータを反映する
+                                val column = cell["dayOfWeek"]?.toInt() ?: 0
                                 gridState[row][column] = true
                             }
                             updateGridLayout()
@@ -116,9 +117,13 @@ class SetTimetableActivity : AppCompatActivity() {
                     db.collection("users").document(currentUid)
                         .set(data, SetOptions.merge())
                         .addOnSuccessListener {
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            if (isEdit){
+                                finish()
+                            }else{
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "エラーが発生しました $e", Toast.LENGTH_SHORT).show()
@@ -137,10 +142,10 @@ class SetTimetableActivity : AppCompatActivity() {
                 cellButton?.let {
                     when{
                         gridState[row][column] -> {
-                            it.setBackgroundColor(getColor(R.color.selected_blue))
+                            it.setBackgroundResource(R.drawable.timetable_grid_selected)
                         }
                         else -> {
-                            it.setBackgroundColor(getColor(R.color.unselected_gray))
+                            it.setBackgroundResource(R.drawable.timetable_grid_unselected)
                         }
                     }
                 }
